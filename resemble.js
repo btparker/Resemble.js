@@ -47,11 +47,21 @@ URL: https://github.com/Huddle/Resemble.js
 
 		function parseImage(sourceImageData, width, height){
 
-			var pixleCount = 0;
+			var pixelCount = 0;
+
+			// For non-weighted averages
 			var redTotal = 0;
 			var greenTotal = 0;
 			var blueTotal = 0;
 			var brightnessTotal = 0;
+
+			// For rgb color histogram
+			data.hist = {
+				red: Array.apply(null, Array(256)).map(Number.prototype.valueOf,0),
+				green: Array.apply(null, Array(256)).map(Number.prototype.valueOf,0),
+				blue : Array.apply(null, Array(256)).map(Number.prototype.valueOf,0),
+				brightness : Array.apply(null, Array(256)).map(Number.prototype.valueOf,0)
+			};
 
 			loop(height, width, function(verticalPos, horizontalPos){
 				var offset = (verticalPos*width + horizontalPos) * 4;
@@ -60,7 +70,12 @@ URL: https://github.com/Huddle/Resemble.js
 				var blue = sourceImageData[offset + 2];
 				var brightness = getBrightness(red,green,blue);
 
-				pixleCount++;
+				data.hist.red[red] += 1;
+				data.hist.green[green] += 1;
+				data.hist.blue[blue] += 1;
+				data.hist.brightness[brightness] += 1;
+
+				pixelCount++;
 
 				redTotal += red / 255 * 100;
 				greenTotal += green / 255 * 100;
@@ -68,10 +83,12 @@ URL: https://github.com/Huddle/Resemble.js
 				brightnessTotal += brightness / 255 * 100;
 			});
 
-			data.red = Math.floor(redTotal / pixleCount);
-			data.green = Math.floor(greenTotal / pixleCount);
-			data.blue = Math.floor(blueTotal / pixleCount);
-			data.brightness = Math.floor(brightnessTotal / pixleCount);
+			data.average = {
+				red : Math.floor(redTotal / pixelCount),
+				green : Math.floor(greenTotal / pixelCount),
+				blue : Math.floor(blueTotal / pixelCount),
+				brightness : Math.floor(brightnessTotal / pixelCount)
+			};
 
 			triggerDataUpdate();
 		}

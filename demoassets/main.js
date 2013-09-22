@@ -41,10 +41,10 @@ $(function(){
 
 		resemble(file).onComplete(function(data){
 			$('#image-data').show();
-			$('#red').css('width',data.red+'%');
-			$('#green').css('width',data.green+'%');
-			$('#blue').css('width',data.blue+'%');
-			$('#brightness').css('width',data.brightness+'%');
+			$('#red').css('width',data.average.red+'%');
+			$('#green').css('width',data.average.green+'%');
+			$('#blue').css('width',data.average.blue+'%');
+			$('#brightness').css('width',data.average.brightness+'%');
 		});
 
 	});
